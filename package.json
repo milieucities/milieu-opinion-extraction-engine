@@ -1,0 +1,23 @@
+{
+  "name": "report-one-pager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clairellesage/report-one-pager.git"
+  },
+  "author": "Claire Lesage",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clairellesage/report-one-pager/issues"
+  },
+  "homepage": "https://github.com/clairellesage/report-one-pager#readme",
+  "dependencies": {
+    "chartjs": "^0.3.24",
+    "express": "^4.15.2"
+  }
+}
