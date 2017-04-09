@@ -17,7 +17,11 @@
   },
   "homepage": "https://github.com/clairellesage/report-one-pager#readme",
   "dependencies": {
-    "chartjs": "^0.3.24",
-    "express": "^4.15.2"
+    "base64-js": "^1.2.0",
+    "basic-auth": "^1.1.0",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "request": "^2.81.0",
+    "xmlhttprequest": "^1.8.0"
   }
 }
