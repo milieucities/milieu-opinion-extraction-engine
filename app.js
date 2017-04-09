@@ -25,7 +25,8 @@ client.send(null);
 
   request.post('https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27', {
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': {'63c49a5a-11dc-45e6-9451-eb03743044b0': 'fAlSUZYF5VZI'}
     },
     body: JSON.stringify(parameters)
   }, function (err, res, body) {
@@ -34,8 +35,4 @@ client.send(null);
     } else {
       console.log(body)
     }
-  });
-
-  // a POST request will be sent to http://www.mockbin.com
-  // with body an application/x-www-form-urlencoded body:
-  // foo=bar&hello=world
+  }).auth('63c49a5a-11dc-45e6-9451-eb03743044b0', 'fAlSUZYF5VZI', false);
