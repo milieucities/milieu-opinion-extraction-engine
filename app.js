@@ -1,10 +1,10 @@
-var request = require('request')
+var request = require('request');
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
-var client = new XMLHttpRequest()
-var base64 = require('base64-js').fromByteArray;
+var client = new XMLHttpRequest();
+// var comments = require('comments.js');
+var fs = require('fs')
 
-client.open("GET", "http://twitter.com/account/verify_credentials.json", false, "TestAct", "password");
-client.setRequestHeader("Authorization", "Basic " + base64("63c49a5a-11dc-45e6-9451-eb03743044b0': 'fAlSUZYF5VZI"));
+client.open("GET", "http://www.google.com", false, "TestAct", "password");
 client.send(null);
 
  let parameters = {
@@ -21,18 +21,22 @@ client.send(null);
        'limit': 2
      }
    }
- }
+ };
 
-  request.post('https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27', {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': {'63c49a5a-11dc-45e6-9451-eb03743044b0': 'fAlSUZYF5VZI'}
-    },
-    body: JSON.stringify(parameters)
-  }, function (err, res, body) {
-    if (err) {
-      console.log("error")
-    } else {
-      console.log(body)
-    }
-  }).auth('63c49a5a-11dc-45e6-9451-eb03743044b0', 'fAlSUZYF5VZI', false);
+request.post('https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27', {
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(parameters)
+}, function (err, res, body) {
+  if (err) {
+    console.log("error");
+  } else {
+    fs.writeFile('results.txt', body, function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log('Success! Check results.txt');
+    });
+  }
+}).auth('63c49a5a-11dc-45e6-9451-eb03743044b0', 'fAlSUZYF5VZI', false);
