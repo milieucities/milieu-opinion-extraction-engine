@@ -64,4 +64,4 @@ function sortValues(arr) {
   return sortedArr;
 }
 
-module.exports = getQuestion(9, data)
+module.exports = getQuestion(7, data)

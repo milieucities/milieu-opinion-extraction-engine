@@ -1,4 +1,6 @@
 const obj = require('./output.json');
+const fs = require('fs');
+var request = require('request');
 
 function createParticipantsArray(obj) {
 	const participantsArray = [];
@@ -16,4 +18,15 @@ function createParticipantsArray(obj) {
 	return participantsArray;
 }
 
-console.log(createParticipantsArray(obj));
+
+fs.writeFile('AT-Watson.txt', JSON.stringify(createParticipantsArray(obj)), function (err) {
+  if (err) {
+    return console.log(err);
+  }
+  console.log('Success! Check AT-Watson.txt');
+})
+
+function stream(input, filePath) {
+ 	request.get(url)
+         .pipe(fs.createWriteStream(filePath));
+}	
