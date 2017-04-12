@@ -4,14 +4,11 @@ var client = new XMLHttpRequest();
 var fs = require('fs')
 var txt = require('./AT-Watson.json')
 
-// client.open("GET", "http://www.google.com", false, "TestAct", "password");
-// client.send(null);
-
 function parseJSON(txt) {
   let analyze = ''
   for (i in txt) {
     if (txt[i].csvRow[7] !== "") {
-      analyze += `${txt[i].csvRow[7]} `
+      analyze += `${watson(txt[i].csvRow[7])}`
     }
   } return analyze; 
 }

@@ -13,15 +13,18 @@ We can then pick which graphical representation that best fits the data using li
 
 How to use
 =======
-$npm install
+>$npm install
 
 Step 1: To turn the .csv file into .json, type
-$node csvtojson.js
+>$node csvtojson.js
 
 Outputs AT-parsed.json
 
+Step 2: To parse the .json file into an array of arrays, type
+$node parsejson.js
+
 Step 2: To run Watson, type
-$node app.js //this produces a json file with the results of watson, but only for the first participant
+>$node app.js //this produces a json file with the results of watson, but only for the first participant
 
 Results with keywords and sentiment should be in results.json file
 
