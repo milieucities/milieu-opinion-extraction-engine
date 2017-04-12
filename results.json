@@ -1,37 +1,4 @@
 {
-  "keywords": [
-    {
-      "text": "Acess",
-      "sentiment": {
-        "score": 0.0
-      },
-      "relevance": 0.949892,
-      "emotion": {
-        "sadness": 0.0,
-        "joy": 0.0,
-        "fear": 0.0,
-        "disgust": 0.0,
-        "anger": 0.0
-      }
-    }
-  ],
-  "language": "en"
-}    }
-    }
-  ],
-  "language": "en"
-}  "sentiment": {
-        "score": 0.577132
-      },
-      "relevance": 0.42225,
-      "emotion": {
-        "sadness": 0.12065,
-        "joy": 0.498095,
-        "fear": 0.141931,
-        "disgust": 0.030433,
-        "anger": 0.061688
-      }
-    }
-  ],
-  "language": "en"
+  "error": "invalid request: content is empty",
+  "code": 400
 }
