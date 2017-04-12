@@ -9,15 +9,16 @@ This repo serves as a template for Milieu's reports. There are three goals in mi
 - the watson-parser can take any question (column) and retrieve the keywords
 - put the data back into a .csv file
 
-We can then pick which graphical representation best fits the data using libraries or working with excel graphs.
+We can then pick which graphical representation that best fits the data using libraries or working with excel graphs.
 
 How to use
 =======
 $npm install
-$npm install -g csvtojson //this will need to be part of the program, but I haven't figured it out yet
 
 Step 1: To turn the .csv file into .json, type
-$csvtojson AT-survey.csv > output.json
+$node csvtojson.js
+
+Outputs AT-parsed.json
 
 Step 2: To parse the .json file into an array of arrays, type
 $node parsejson.js

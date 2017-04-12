@@ -1,23 +1,22 @@
 var request = require('request');
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 var client = new XMLHttpRequest();
-// var comments = require('comments.js');
 var fs = require('fs')
-var txt = JSON.parse(JSON.stringify(require('./AT-Watson.txt')))
+var txt = require('./AT-Watson.json')
 
 client.open("GET", "http://www.google.com", false, "TestAct", "password");
 client.send(null);
 
 function parseJSON(txt) {
-  let participantStr = ''
   for (i in txt) {
-    participantStr += txt[i][7].toString();
+    if (txt[i].csvRow[7] !== "") {
+      return `${txt[i].csvRow[7]} `
+    }
   }
-  return participantStr;
 }
 
  let parameters = {
-  'text': JSON.stringify(parseJSON(txt)),
+  'text': 'hate hate hate',
   'features': {
    'keywords': {
       'emotion': true,
@@ -34,7 +33,6 @@ request.post('https://gateway.watsonplatform.net/natural-language-understanding/
   body: JSON.stringify(parameters)
 }, function (err, res, body) {
     fs.writeFile('results.json', body, function (err) {
-      debugger;
       if (err) {
         return console.log(err);
       }
