@@ -1,10 +1,7 @@
 const csvFilePath = './AT-survey.csv'
 const csv = require('csvtojson')
 const Converter = require("csvtojson").Converter;
-
 const fs = require("fs"); 
-
-//new converter instance
 const csvConverter = new Converter({});
 
 //end_parsed will be emitted once parsing finished

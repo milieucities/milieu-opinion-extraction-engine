@@ -3,7 +3,7 @@
 Description
 ===========
 
-This repo serves as a template for Milieu's reports. There are three goals in mind:
+This repo serves as a parsing program for Milieu's reports. There are three goals in mind:
 
 - for any new client we can simply plug their .csv file into watson
 - the watson-parser can take any question (column) and retrieve the keywords
@@ -21,11 +21,11 @@ $node csvtojson.js
 Outputs AT-parsed.json
 
 Step 2: To run Watson, type
-$node app.js //this produces a json file with 'undefined'
+$node app.js //this produces a json file with the results of watson, but only for the first participant
 
 Results with keywords and sentiment should be in results.json file
 
 Next steps:
--Stream steps 1&2, in memory
+-Stream steps 1 & 2, in memory
 -Make the resultant .json file back into .csv
 -Hide the auth keys in app.js
