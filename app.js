@@ -4,19 +4,20 @@ var client = new XMLHttpRequest();
 var fs = require('fs')
 var txt = require('./AT-Watson.json')
 
-client.open("GET", "http://www.google.com", false, "TestAct", "password");
-client.send(null);
+// client.open("GET", "http://www.google.com", false, "TestAct", "password");
+// client.send(null);
 
 function parseJSON(txt) {
+  let analyze = ''
   for (i in txt) {
     if (txt[i].csvRow[7] !== "") {
-      return `${txt[i].csvRow[7]} `
+      analyze += `${txt[i].csvRow[7]} `
     }
-  }
+  } return analyze; 
 }
 
- let parameters = {
-  'text': 'hate hate hate',
+const parameters = {
+  'text': JSON.stringify(parseJSON(txt)),
   'features': {
    'keywords': {
       'emotion': true,
@@ -39,3 +40,4 @@ request.post('https://gateway.watsonplatform.net/natural-language-understanding/
       console.log('Success! Check results.json');
     });
 }).auth('63c49a5a-11dc-45e6-9451-eb03743044b0', 'fAlSUZYF5VZI', false);
+

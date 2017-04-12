@@ -1,1 +1,33 @@
-undefined
+{
+  "keywords": [
+    {
+      "text": "paved trails Paved",
+      "sentiment": {
+        "score": 0.947533
+      },
+      "relevance": 0.953775,
+      "emotion": {
+        "sadness": 0.090331,
+        "joy": 0.780197,
+        "fear": 0.002639,
+        "disgust": 0.011756,
+        "anger": 0.011243
+      }
+    },
+    {
+      "text": "Paved Paved trails",
+      "sentiment": {
+        "score": 0.434907
+      },
+      "relevance": 0.884327,
+      "emotion": {
+        "sadness": 0.066224,
+        "joy": 0.703044,
+        "fear": 0.00728,
+        "disgust": 0.018418,
+        "anger": 0.101145
+      }
+    }
+  ],
+  "language": "en"
+}
