@@ -18,25 +18,25 @@ function parseJSON(txt) {
     }
   };
   //change this to get responses from all participants
-  for (i in arrayOfParticipants) {
+  for (i = 0; i < 4; i++) {
     var column = arrayOfParticipants[i]
     var field38 = arrayOfParticipants[i]['Think of a neighbour or friend who does not cycle the trail or bike lane network now'][' What do you think is the most important improvement the City can make to encourage them to cycle?'];
      parameters.text = field38
     if (field38){
         console.log(parameters.text)
-        var response = JSON.stringify(watson(parameters));
+        var response = watson(parameters);
         if (response) {
           analyze.push(response);
         }
     }
   }
-  return writeToJSON(JSON.stringify(analyze)); 
+  return writeToJSON(JSON.stringify(analyze, null, "  ")); 
 }
 
 parseJSON(arrayOfParticipants);
 
 function writeToJSON(body) {
-  fs.writeFile('results.json', JSON.stringify(body), function (err) {
+  fs.writeFile('results.json', body, function (err) {
     if (err) {
       return console.log(err);
     }
