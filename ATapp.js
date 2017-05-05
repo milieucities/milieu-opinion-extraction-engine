@@ -1,6 +1,8 @@
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 var fs = require('fs')
 var arrayOfParticipants = require('./AT-Parsed.json')
+var username = require('keys.js').username
+var password = require('keys.js').password
 
 function parseJSON(txt) {
   let analyze = [];
@@ -46,7 +48,7 @@ function writeToJSON(body) {
 
 function watson(watsonParams) {
   var request = new XMLHttpRequest();
-  request.open('POST', 'https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27', false, '63c49a5a-11dc-45e6-9451-eb03743044b0', 'fAlSUZYF5VZI');
+  request.open('POST', 'https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27', false, username, password);
   request.setRequestHeader('Content-Type', 'application/json');
   request.send(JSON.stringify(watsonParams));
   if (request.status === 200) {
