@@ -1,36 +1,46 @@
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 var fs = require('fs')
-var arrayOfParticipants = require('./AT-Watson.json')
+var arrayOfParticipants = require('./AT-Parsed.json')
 
 function parseJSON(txt) {
   let analyze = [];
   let parameters = {
-    'text': '',
-    'features': {
-     'keywords': {
-        'emotion': true,
-        'sentiment': true,
-        'limit': 2
-      }
+  'text': '',
+  'features': {
+    'keywords': {
+      'emotion': true,
+      'sentiment': true,
+      'limit': 2
+    },
+    'sentiment': {
+      'document': true
     }
   }
-  var columns = [7, 8, 9];
+};
   //change this to get responses from all participants
-  for (i in arrayOfParticipants) {
-    for (j in columns) {
-      var column = columns[j];
-      parameters.text = arrayOfParticipants[i].csvRow[column];
-      if (parameters.text){
-        console.log(parameters.text)
-        var response = JSON.stringify(watson(parameters));
-        if (response) {
-          analyze.push(response);
-        }
+  for (i = 1; i < arrayOfParticipants.length; i++) {
+    let questions = arrayOfParticipants[i];
+    let question = questions['Comments/feedback on priority level for hepatitis C:']
+    if (question != "") {
+      parameters.text = question;
+      console.log(parameters.text);
+      let response = JSON.stringify(watson(parameters));
+      if (response) {
+        let who = questions['4']['What is your professional role?'];
+        responseObj = {
+                        "professionalRole": who,
+                        "documentText": parameters.text,
+                        "watson" : response
+                      }
+        analyze.push(responseObj);
       }
     }
   }
-  return writeToJSON(JSON.stringify(analyze)); 
+  return writeToJSON(JSON.stringify(analyze));
 }
+
+// console.log(arrayOfParticipants[i]['Comments/feedback on priority level for hepatitis C:'])
+
 
 parseJSON(arrayOfParticipants);
 
@@ -45,12 +55,12 @@ function writeToJSON(body) {
 
 function watson(watsonParams) {
   var request = new XMLHttpRequest();
-  request.open('POST', 'https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27', false, '63c49a5a-11dc-45e6-9451-eb03743044b0', 'fAlSUZYF5VZI');
+  request.open('POST', 'https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27', false, '630ed032-7034-4161-a674-4b8b930ee81a', 'MKInaDjfP3ZG');
   request.setRequestHeader('Content-Type', 'application/json');
   request.send(JSON.stringify(watsonParams));
   if (request.status === 200) {
     return JSON.parse(request.responseText);
   } 
-  console.log( `An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}, ${request.error}` );
+  console.log( `An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}` );
   return null;
 }

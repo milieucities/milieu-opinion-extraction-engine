@@ -30,5 +30,6 @@ Results with keywords and sentiment should be in results.json file
 
 Next steps:
 -Stream steps 1-3, in memory
+-Pretty print the JSON file
 -Make the resultant .json file back into .csv
--Hide the auth keys in app.js
+-Hide the auth keys in app.js 
