@@ -31,7 +31,8 @@ Results with keywords and sentiment should be in results.json file
 Next steps:
 ===========
 
-Stream steps 1-3, in memory
+Stream steps 1-3, in memory!
 
 Make the resultant .json file back into .csv
+
 Make modular for any csv
