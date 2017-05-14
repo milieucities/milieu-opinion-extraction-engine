@@ -4,8 +4,6 @@ var arrayOfParticipants = require('./AT-Parsed.json')
 var username = require('keys.js').username
 var password = require('keys.js').password
 
-// formatted by emacs
-
 function parseJSON(txt) {
     let analyze = [];
     let parameters = {
