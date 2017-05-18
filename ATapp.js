@@ -20,6 +20,7 @@ function parseJSON(txt) {
     }
   };
   //change this to get responses from all participants
+  //NOTE: only runs for 4 comments to save API calls.
   for (i = 0; i < 4; i++) {
     var column = arrayOfParticipants[i]
     var field38 = arrayOfParticipants[i]['Think of a neighbour or friend who does not cycle the trail or bike lane network now'][' What do you think is the most important improvement the City can make to encourage them to cycle?'];
