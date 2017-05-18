@@ -1,66 +1,91 @@
-var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
-var fs = require('fs')
-var arrayOfParticipants = require('./AT-Parsed.json')
-
-function parseJSON(txt) {
-  let analyze = [];
-  let parameters = {
-  'text': '',
-  'features': {
-    'keywords': {
-      'emotion': true,
-      'sentiment': true,
-      'limit': 2
-    },
-    'sentiment': {
-      'document': true
-    }
-  }
-};
-  //change this to get responses from all participants
-  for (i = 1; i < arrayOfParticipants.length; i++) {
-    let questions = arrayOfParticipants[i];
-    let question = questions['Comments/feedback on priority level for hepatitis C:']
-    if (question != "") {
-      parameters.text = question;
-      console.log(parameters.text);
-      let response = JSON.stringify(watson(parameters));
-      if (response) {
-        let who = questions['4']['What is your professional role?'];
-        responseObj = {
-                        "professionalRole": who,
-                        "documentText": parameters.text,
-                        "watson" : response
-                      }
-        analyze.push(responseObj);
+const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+const url = 'https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27'
+const fs = require('fs');
+const csvToJson = require('csvtojson')
+const Converter = require("csvtojson").Converter;
+const csvConverter = new Converter({});
+//user provides csv path at command line
+const fileName = process.argv[2];
+const csv = require(`./${fileName}`);
+// const json = require(`./${fileName}.json`)
+//user provides question number or text in quotation marks at command line
+const questionText = process.argv[3];
+//watson credentials
+const username = require('./test-code/keys.js').username;
+const password = require('./test-code/keys.js').password;
+//watson only runs for this amount of comments to save API calls.
+//to analyze all comments, change this to txt.length
+const apiCalls = 4;
+//responses get pushed into this array to be analyzed
+const analysis = [];
+//required params for watson API, see documentation for more options
+const parameters = {
+    'text': '',
+    'features': {
+      'sentiment': {
+        'document': true
+      },
+      'keywords': {
+        'emotion': true,
+        'sentiment': true,
+        'limit': 2
       }
     }
+  };
+
+function main(csv) {
+  function writeJSON(csv) {
+    csvConverter.on("end_parsed", function(jsonObj) {
+      fs.writeFile('${fileName}.json', stringify(jsonObj, null, "  "), function (err) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log('Success! Check ${fileName}.json!');
+      })
+    });
+    //read from file
+    fs.createReadStream(csvFilePath).pipe(csvConverter);
   }
-  return writeToJSON(JSON.stringify(analyze));
-}
 
-// console.log(arrayOfParticipants[i]['Comments/feedback on priority level for hepatitis C:'])
-
-
-parseJSON(arrayOfParticipants);
-
-function writeToJSON(body) {
-  fs.writeFile('results.json', JSON.stringify(body), function (err) {
-    if (err) {
-      return console.log(err);
+  function getColumns(json) {
+    const jsonFile = writeJSON(csv)
+    for (i = 0; i < apiCalls; i++) {
+      if (jsonFile[i][questionText] != null) {
+        var participantAnswer = jsonFile[i][questionText]
+        parameters.text = participantAnswer
+        //logs each comment before calling watson
+        console.log(parameters.text)
+        var response = watson(parameters);
+        if (response) {
+          analysis.push(response);
+        }
+      } else {
+        console.log("That column doesn't exist, please check the CSV file")
+      }
     }
-    console.log('Success! Check results.json');
-  });
+    return writeToJSON(JSON.stringify(analysis, null, "  ")); 
+  }
+
+  function writeToJSON(body) {
+    fs.writeFile(`analysis-${fileName}`, body, function (err) {
+      if (err) {
+        console.log(err);
+      }
+      console.log(`Success! Check analysis-${fileName}`);
+    });
+  }
+
+  function watson(watsonParams) {
+    var request = new XMLHttpRequest();
+    request.open('POST', url, false, username, password);
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(JSON.stringify(watsonParams));
+    if (request.status === 200) {
+      return JSON.parse(request.responseText);
+    } 
+    console.log( `An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}, ${request.error}` );
+    return null;
+  }
 }
 
-function watson(watsonParams) {
-  var request = new XMLHttpRequest();
-  request.open('POST', 'https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27', false, '630ed032-7034-4161-a674-4b8b930ee81a', 'MKInaDjfP3ZG');
-  request.setRequestHeader('Content-Type', 'application/json');
-  request.send(JSON.stringify(watsonParams));
-  if (request.status === 200) {
-    return JSON.parse(request.responseText);
-  } 
-  console.log( `An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}` );
-  return null;
-}
+main(csv);
