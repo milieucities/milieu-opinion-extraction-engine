@@ -34,21 +34,25 @@ const parameters = {
   };
 
 function main(csv) {
-  function writeJSON(csv) {
+  //convert the JSON to CSV
+  function createJSON(csv) {
+    //end_parsed will be emitted once parsing finished
     csvConverter.on("end_parsed", function(jsonObj) {
-      fs.writeFile('${fileName}.json', stringify(jsonObj, null, "  "), function (err) {
+      fs.writeFile('${fileName}.json', JSON.stringify(jsonObj, null, "  "), function (err) {
         if (err) {
           return console.log(err);
         }
         console.log('Success! Check ${fileName}.json!');
       })
     });
-    //read from file
+    //read from csv file
     fs.createReadStream(csvFilePath).pipe(csvConverter);
   }
 
+  //this function needs access to the output file from createJSON, otherwise it gets an unexpected identifier error from csv
   function getColumns(json) {
-    const jsonFile = writeJSON(csv)
+    //trying to get the .json file...
+    const jsonFile = createJSON(csv)
     for (i = 0; i < apiCalls; i++) {
       if (jsonFile[i][questionText] != null) {
         var participantAnswer = jsonFile[i][questionText]
@@ -75,16 +79,18 @@ function main(csv) {
     });
   }
 
-  function watson(watsonParams) {
-    var request = new XMLHttpRequest();
-    request.open('POST', url, false, username, password);
-    request.setRequestHeader('Content-Type', 'application/json');
-    request.send(JSON.stringify(watsonParams));
-    if (request.status === 200) {
-      return JSON.parse(request.responseText);
-    } 
-    console.log( `An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}, ${request.error}` );
-    return null;
+  function analyze() {
+    function analyzeWatson(watsonParams) {
+      var request = new XMLHttpRequest();
+      request.open('POST', url, false, username, password);
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(watsonParams));
+      if (request.status === 200) {
+        return JSON.parse(request.responseText);
+      } 
+      console.log( `An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}, ${request.error}` );
+      return null;
+    }
   }
 }
 
