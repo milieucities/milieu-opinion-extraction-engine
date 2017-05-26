@@ -4,20 +4,25 @@ const fs = require('fs');
 const csvToJson = require('csvtojson')
 const Converter = require("csvtojson").Converter;
 const csvConverter = new Converter({});
+
 //user provides csv path at command line
-const fileName = process.argv[2];
-const csv = require(`./${fileName}`);
-// const json = require(`./${fileName}.json`)
+// const fileName = process.argv[2];
+// const csv = require(`./${fileName}`);
+
 //user provides question number or text in quotation marks at command line
-const questionText = process.argv[3];
+// const questionText = process.argv[3];
+
 //watson credentials
-const username = require('./test-code/keys.js').username;
-const password = require('./test-code/keys.js').password;
+const username = require('./dev/keys.js').username;
+const password = require('./dev/keys.js').password;
+
 //watson only runs for this amount of comments to save API calls.
 //to analyze all comments, change this to txt.length
 const apiCalls = 4;
+
 //responses get pushed into this array to be analyzed
 const analysis = [];
+
 //required params for watson API, see documentation for more options
 const parameters = {
     'text': '',
@@ -33,65 +38,80 @@ const parameters = {
     }
   };
 
-function main(csv) {
-  //convert the JSON to CSV
-  function createJSON(csv) {
-    //end_parsed will be emitted once parsing finished
-    csvConverter.on("end_parsed", function(jsonObj) {
-      fs.writeFile('${fileName}.json', JSON.stringify(jsonObj, null, "  "), function (err) {
-        if (err) {
-          return console.log(err);
-        }
-        console.log('Success! Check ${fileName}.json!');
-      })
-    });
-    //read from csv file
-    fs.createReadStream(csvFilePath).pipe(csvConverter);
-  }
-
-  //this function needs access to the output file from createJSON, otherwise it gets an unexpected identifier error from csv
-  function getColumns(json) {
-    //trying to get the .json file...
-    const jsonFile = createJSON(csv)
-    for (i = 0; i < apiCalls; i++) {
-      if (jsonFile[i][questionText] != null) {
-        var participantAnswer = jsonFile[i][questionText]
-        parameters.text = participantAnswer
-        //logs each comment before calling watson
-        console.log(parameters.text)
-        var response = watson(parameters);
-        if (response) {
-          analysis.push(response);
-        }
-      } else {
-        console.log("That column doesn't exist, please check the CSV file")
-      }
-    }
-    return writeToJSON(JSON.stringify(analysis, null, "  ")); 
-  }
-
-  function writeToJSON(body) {
-    fs.writeFile(`analysis-${fileName}`, body, function (err) {
-      if (err) {
-        console.log(err);
-      }
-      console.log(`Success! Check analysis-${fileName}`);
-    });
-  }
-
-  function analyze() {
-    function analyzeWatson(watsonParams) {
-      var request = new XMLHttpRequest();
-      request.open('POST', url, false, username, password);
-      request.setRequestHeader('Content-Type', 'application/json');
-      request.send(JSON.stringify(watsonParams));
-      if (request.status === 200) {
-        return JSON.parse(request.responseText);
-      } 
-      console.log( `An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}, ${request.error}` );
-      return null;
-    }
-  }
+function main(filename) {
+  parseCSV(filename)
+  .then(function(json) {
+    return getColumns(json);
+  }).then(function(parameters){
+    return analyzeWatson(parameters);
+  }).then(function(results){
+    console.log(results)
+    // return writeToJSON(body);
+  })
 }
 
-main(csv);
+main('AT-survey.csv');
+
+function parseCSV (filename) {
+  return new Promise(function(resolve, reject) {
+    var converter = new Converter({});
+    converter.on("end_parsed", function(json, err) {
+      if (err) {
+        reject(new Error("Cannot parse"))
+      }
+      resolve(json);
+    });
+  fs.createReadStream(filename).pipe(converter);
+  });
+}
+
+  //this function needs access to the output file from createJSON, otherwise it gets an unexpected identifier error from csv
+function getColumns(json) {
+  return new Promise(function(resolve, reject){
+    for (i = 0; i < apiCalls; i++) {
+      if (json[i][questionText] != null) {
+        var participantAnswer = json[i][questionText];
+        parameters.text = participantAnswer;
+        resolve(parameters);
+      } else {
+        reject(new Error("That column doesn't exist, please check the CSV file"));
+      }
+    };
+  })
+}
+
+//JSON.stringify(analysis, null, "  ")
+
+    
+    // var response = analyzeWatson(parameters);
+    // if (response) {
+    //   analysis.push(response);
+
+//  return writeToJSON(JSON.stringify(analysis, null, "  ")); 
+
+function analyzeWatson(parameters) {
+  return new Promise(function(resolve, reject) {
+    var request = new XMLHttpRequest();
+    request.open('POST', url, false, username, password);
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(JSON.stringify(watsonParams));
+    console.log(parameters.text);
+    if (request.status === 200) {
+      resolve(JSON.parse(request.responseText));
+    } 
+    reject(new Error(`An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}, ${request.error}` ));
+  })
+}
+
+function writeToJSON(body) {
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(`analysis-${fileName}`, body, function (err) {
+      resolve(console.log(`Success! Check analysis-${fileName}`));
+      reject(new Error(`Cannot write output file.`))
+    });
+  })
+}
+
+
+
+
