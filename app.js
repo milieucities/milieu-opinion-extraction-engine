@@ -6,11 +6,11 @@ const Converter = require("csvtojson").Converter;
 const csvConverter = new Converter({});
 
 //user provides csv path at command line
-// const fileName = process.argv[2];
+const fileName = process.argv[2];
 // const csv = require(`./${fileName}`);
 
 //user provides question number or text in quotation marks at command line
-// const questionText = process.argv[3];
+const questionText = 'List up to three challenges related to the existing Fredericton trails/bikeway system:'
 
 //watson credentials
 const username = require('./dev/keys.js').username;
@@ -44,13 +44,12 @@ function main(filename) {
     return getColumns(json);
   }).then(function(parameters){
     return analyzeWatson(parameters);
-  }).then(function(results){
-    console.log(results)
-    // return writeToJSON(body);
+  }).then(function(analysis){
+    console.log(writeToJSON(analysis))
   })
 }
 
-main('AT-survey.csv');
+main(fileName);
 
 function parseCSV (filename) {
   return new Promise(function(resolve, reject) {
@@ -68,13 +67,13 @@ function parseCSV (filename) {
   //this function needs access to the output file from createJSON, otherwise it gets an unexpected identifier error from csv
 function getColumns(json) {
   return new Promise(function(resolve, reject){
-    for (i = 0; i < apiCalls; i++) {
-      if (json[i][questionText] != null) {
+    for (i = 1; i < apiCalls; i++) {
+      if (json[i][questionText] != '') {
         var participantAnswer = json[i][questionText];
         parameters.text = participantAnswer;
         resolve(parameters);
       } else {
-        reject(new Error("That column doesn't exist, please check the CSV file"));
+        reject(new Error("Not a valid column, please check the CSV file"));
       }
     };
   })
@@ -94,21 +93,22 @@ function analyzeWatson(parameters) {
     var request = new XMLHttpRequest();
     request.open('POST', url, false, username, password);
     request.setRequestHeader('Content-Type', 'application/json');
-    request.send(JSON.stringify(watsonParams));
-    console.log(parameters.text);
+    request.send(JSON.stringify(parameters));
     if (request.status === 200) {
       resolve(JSON.parse(request.responseText));
     } 
-    reject(new Error(`An http error occurred; ${JSON.stringify(watsonParams)}, ${request.status}, ${request.responseText}, ${request.error}` ));
+    reject(new Error(`An http error occurred; ${JSON.stringify(parameters)}, ${request.status}, ${request.responseText}, ${request.error}` ));
   })
 }
 
-function writeToJSON(body) {
+
+//changed body to stringified body
+function writeToJSON(analysis) {
   return new Promise(function(resolve, reject) {
-    fs.writeFile(`analysis-${fileName}`, body, function (err) {
+    fs.writeFile(`analysis-${fileName}`, JSON.stringify(analysis, null, "  "), function (err) {
       resolve(console.log(`Success! Check analysis-${fileName}`));
-      reject(new Error(`Cannot write output file.`))
     });
+    reject(new Error(`Cannot write output file.`))
   })
 }
 

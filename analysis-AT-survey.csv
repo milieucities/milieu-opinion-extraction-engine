@@ -1,0 +1,39 @@
+{
+  "sentiment": {
+    "document": {
+      "score": -0.562214,
+      "label": "negative"
+    }
+  },
+  "language": "en",
+  "keywords": [
+    {
+      "text": "person-powered transport",
+      "sentiment": {
+        "score": -0.562214
+      },
+      "relevance": 0.989995,
+      "emotion": {
+        "sadness": 0.17203,
+        "joy": 0.063755,
+        "fear": 0.112329,
+        "disgust": 0.107466,
+        "anger": 0.089678
+      }
+    },
+    {
+      "text": "sidewalks",
+      "sentiment": {
+        "score": -0.562214
+      },
+      "relevance": 0.881683,
+      "emotion": {
+        "sadness": 0.17203,
+        "joy": 0.063755,
+        "fear": 0.112329,
+        "disgust": 0.107466,
+        "anger": 0.089678
+      }
+    }
+  ]
+}
