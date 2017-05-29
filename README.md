@@ -15,26 +15,12 @@ How to use
 =======
 >$npm install
 
-Step 1: To turn the .csv file into .json, type:
->$node csvtojson.js
-
-Outputs AT-parsed.json
-
-Step 2: To run Watson, type:
->$node ATapp.js //this should produce a json file with the results of watson
-
-Results with keywords and sentiment should be in results.json file.
-
-Step 3: Pretty parse the results.json.
->$parseresults.js
+>node app.js {fileName} {questionText}
 
 Next steps:
 ===========
 
-Stream steps 1-3!
+- Better Watson analysis
+- Other analysis, e.g. demographic info
 
-Make the resultant .json file back into .csv
 
-Come up with a way to pick columns, possibly from the command line
-
-Make modular for any csv
