@@ -8,17 +8,6 @@ const csvConverter = new Converter({});
 //user provides csv path at command line
 const fileName = process.argv[2];
 
-//user provides question number or text in quotation marks at command line
-const questionText = 'List up to three challenges related to the existing Fredericton trails/bikeway system:'
-
-//watson credentials
-const username = require('./dev/keys.js').username;
-const password = require('./dev/keys.js').password;
-
-//watson only runs for this amount of comments to save API calls.
-//to analyze all comments, change this to txt.length
-const apiCalls = 5;
-
 //responses get pushed into this array to be analyzed
 const comments = [];
 const analysis = [];
@@ -40,6 +29,7 @@ const parameters = {
     }
   }
 };
+
 
 function main(filename) {
   parseCSV(filename)
@@ -79,8 +69,6 @@ function getColumns(json) {
     resolve(comments);
   })
 }
-
-//NOTE: each params needs to be pushed in to analysis array, to analyze all comments
 
 function analyzeWatson(comments) {
     return new Promise(function(resolve, reject) {
