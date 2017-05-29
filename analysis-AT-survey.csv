@@ -1,39 +1,144 @@
-{
-  "sentiment": {
-    "document": {
-      "score": -0.562214,
-      "label": "negative"
-    }
-  },
-  "language": "en",
-  "keywords": [
-    {
-      "text": "person-powered transport",
-      "sentiment": {
-        "score": -0.562214
-      },
-      "relevance": 0.989995,
-      "emotion": {
-        "sadness": 0.17203,
-        "joy": 0.063755,
-        "fear": 0.112329,
-        "disgust": 0.107466,
-        "anger": 0.089678
+[
+  {
+    "sentiment": {
+      "document": {
+        "score": -0.708409,
+        "label": "negative"
       }
     },
-    {
-      "text": "sidewalks",
-      "sentiment": {
-        "score": -0.562214
-      },
-      "relevance": 0.881683,
-      "emotion": {
-        "sadness": 0.17203,
-        "joy": 0.063755,
-        "fear": 0.112329,
-        "disgust": 0.107466,
-        "anger": 0.089678
+    "language": "en",
+    "keywords": [
+      {
+        "text": "dogs",
+        "sentiment": {
+          "score": -0.708409
+        },
+        "relevance": 0.916502,
+        "emotion": {
+          "sadness": 0.153356,
+          "joy": 0.07304,
+          "fear": 0.148385,
+          "disgust": 0.139828,
+          "anger": 0.063825
+        }
       }
-    }
-  ]
-}
+    ]
+  },
+  {
+    "sentiment": {
+      "document": {
+        "score": -0.562214,
+        "label": "negative"
+      }
+    },
+    "language": "en",
+    "keywords": [
+      {
+        "text": "person-powered transport",
+        "sentiment": {
+          "score": -0.562214
+        },
+        "relevance": 0.989995,
+        "emotion": {
+          "sadness": 0.17203,
+          "joy": 0.063755,
+          "fear": 0.112329,
+          "disgust": 0.107466,
+          "anger": 0.089678
+        }
+      },
+      {
+        "text": "sidewalks",
+        "sentiment": {
+          "score": -0.562214
+        },
+        "relevance": 0.881683,
+        "emotion": {
+          "sadness": 0.17203,
+          "joy": 0.063755,
+          "fear": 0.112329,
+          "disgust": 0.107466,
+          "anger": 0.089678
+        }
+      }
+    ]
+  },
+  {
+    "sentiment": {
+      "document": {
+        "score": 0,
+        "label": "neutral"
+      }
+    },
+    "language": "en",
+    "keywords": [
+      {
+        "text": "trail",
+        "sentiment": {
+          "score": 0
+        },
+        "relevance": 0.94005,
+        "emotion": {
+          "sadness": 0.12309,
+          "joy": 0.351319,
+          "fear": 0.100865,
+          "disgust": 0.245453,
+          "anger": 0.147135
+        }
+      },
+      {
+        "text": "park",
+        "sentiment": {
+          "score": 0
+        },
+        "relevance": 0.888087,
+        "emotion": {
+          "sadness": 0.12309,
+          "joy": 0.351319,
+          "fear": 0.100865,
+          "disgust": 0.245453,
+          "anger": 0.147135
+        }
+      }
+    ]
+  },
+  {
+    "sentiment": {
+      "document": {
+        "score": 0,
+        "label": "neutral"
+      }
+    },
+    "language": "en",
+    "keywords": [
+      {
+        "text": "hills",
+        "sentiment": {
+          "score": 0
+        },
+        "relevance": 0.970174,
+        "emotion": {
+          "sadness": 0.274374,
+          "joy": 0.105817,
+          "fear": 0.173801,
+          "disgust": 0.104386,
+          "anger": 0.218864
+        }
+      },
+      {
+        "text": "river",
+        "sentiment": {
+          "score": 0
+        },
+        "relevance": 0.922534,
+        "emotion": {
+          "sadness": 0.274374,
+          "joy": 0.105817,
+          "fear": 0.173801,
+          "disgust": 0.104386,
+          "anger": 0.218864
+        }
+      }
+    ]
+  }
+]
