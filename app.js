@@ -31,7 +31,6 @@ const parameters = {
         'document': true
       },
       'keywords': {
-        'emotion': true,
         'sentiment': true,
         'limit': 2
       }
@@ -39,7 +38,7 @@ const parameters = {
   };
 
 function main(filename) {
-  parseCSV(filename)
+  parseCSV(filename);
   .then(function(json) {
     return getColumns(json);
   }).then(function(analysis){
@@ -70,7 +69,7 @@ function getColumns(json) {
       var participantAnswer = json[i][questionText];
       if (participantAnswer != '') {
         parameters.text = participantAnswer;
-        comments.push(parameters.text)
+        comments.push(parameters.text);
       } 
     }
     resolve(comments);
@@ -89,12 +88,12 @@ function analyzeWatson(comments) {
         request.send(JSON.stringify(parameters));
         if (request.status === 200) {
           var response = JSON.parse(request.responseText);
-          analysis.push(response)
+          analysis.push({comment:comment, analysis:response});
         } else {
       reject(new Error(`An http error occurred; ${JSON.stringify(parameters)}, ${request.status}, ${request.responseText}, ${request.error}` ));
       }
     })
-    resolve(analysis)
+    resolve(analysis);
   })
 }
 
