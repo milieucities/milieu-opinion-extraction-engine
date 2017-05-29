@@ -13,6 +13,8 @@ We can then pick which graphical representation that best fits the data using li
 
 How to use
 =======
+Put the csv file in the milieu-opinion-extraction-engine folder.
+
 >$npm install
 
 >node app.js {fileName} {questionText}

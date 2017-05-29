@@ -25,24 +25,28 @@ const analysis = [];
 
 //required params for watson API, see documentation for more options
 const parameters = {
-    'text': '',
-    'features': {
-      'sentiment': {
-        'document': true
-      },
-      'keywords': {
-        'sentiment': true,
-        'limit': 2
-      }
+  'text': '',
+  'features': {
+     'concepts': {
+       'limit': 2
+    },
+    'categories': {},
+    'sentiment': {
+      'document': true
+    },
+    'keywords': {
+      'sentiment': true,
+      'limit': 2
     }
-  };
+  }
+};
 
 function main(filename) {
-  parseCSV(filename);
+  parseCSV(filename)
   .then(function(json) {
-    return getColumns(json);
+    return getColumns(json)
   }).then(function(analysis){
-    return analyzeWatson(analysis);
+    return analyzeWatson(analysis)
   }).then(function(analysis){
     return writeToJSON(analysis);
   })
