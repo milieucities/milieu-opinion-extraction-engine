@@ -8,15 +8,15 @@ const csvConverter = new Converter({});
 //user provides csv path at command line
 const fileName = process.argv[2];
 
-//user provides question number or text in quotation marks at command line
-const questionText = 'List up to three challenges related to the existing Fredericton trails/bikeway system:'
+//user provides question number at command line, can be 1 or more with comma separated list
+const questions = process.argv[3].split(',')
 
 //watson credentials
 const username = require('./dev/keys.js').username;
 const password = require('./dev/keys.js').password;
 
 //watson only runs for this amount of comments to save API calls.
-//to analyze all comments, change this to txt.length
+//to analyze all comments, change this to json.length
 const apiCalls = 5;
 
 //responses get pushed into this array to be analyzed
@@ -29,32 +29,34 @@ const parameters = {
   'features': {
      'concepts': {
        'limit': 2
-    },
-    'categories': {},
-    'sentiment': {
+      },
+      'categories': {
+      'limit' : 1
+      },
+      'sentiment': {
       'document': true
-    },
-    'keywords': {
-      'sentiment': true,
-      'limit': 2
+      },
+      'keywords': {
+        'sentiment': true,
+        'limit': 2
+      }
     }
-  }
 };
 
-function main(filename) {
-  parseCSV(filename)
+function main(fileName) {
+  parseCSV(fileName)
   .then(function(json) {
     return getColumns(json)
+  }).then(function(columns){
+    return analyzeWatson(columns)
   }).then(function(analysis){
-    return analyzeWatson(analysis)
-  }).then(function(analysis){
-    return writeToJSON(analysis);
+    return writeToJSON(fileName, analysis);
   })
 }
 
 main(fileName);
 
-function parseCSV(filename) {
+function parseCSV(fileName) {
   return new Promise(function(resolve, reject) {
     var converter = new Converter({});
     converter.on("end_parsed", function(json, err) {
@@ -63,36 +65,37 @@ function parseCSV(filename) {
       }
       resolve(json);
     });
-  fs.createReadStream(filename).pipe(converter);
+  fs.createReadStream(fileName).pipe(converter);
   });
 }
 
 function getColumns(json) {
   return new Promise(function(resolve, reject){
-    for (i = 1; i <= apiCalls; i++) {
-      var participantAnswer = json[i][questionText];
-      if (participantAnswer != '') {
-        parameters.text = participantAnswer;
-        comments.push(parameters.text);
-      } 
+    for (j = 0; j < questions.length; j++) {
+      for (i = 0; i <= apiCalls; i++) {
+        var key = Object.keys(json[i])[questions[j]]
+        var participantAnswer = json[i][key]
+        if (participantAnswer != '' && participantAnswer.length > 2) {
+          parameters.text = participantAnswer;
+          comments.push({id: questions[j], text: parameters.text});
+      }
     }
-    resolve(comments);
+  }
+  resolve(comments);
   })
 }
-
-//NOTE: each params needs to be pushed in to analysis array, to analyze all comments
 
 function analyzeWatson(comments) {
     return new Promise(function(resolve, reject) {
       comments.forEach(function(comment) { 
-        parameters.text = comment;
+        parameters.text = comment.text;
         var request = new XMLHttpRequest();
         request.open('POST', url, false, username, password);
         request.setRequestHeader('Content-Type', 'application/json');
         request.send(JSON.stringify(parameters));
         if (request.status === 200) {
           var response = JSON.parse(request.responseText);
-          analysis.push({comment:comment, analysis:response});
+          analysis.push({id: comment.id, comment:comment.text, watson:response});
         } else {
       reject(new Error(`An http error occurred; ${JSON.stringify(parameters)}, ${request.status}, ${request.responseText}, ${request.error}` ));
       }
@@ -101,8 +104,7 @@ function analyzeWatson(comments) {
   })
 }
 
-//changed body to stringified body
-function writeToJSON(analysis) {
+function writeToJSON(fileName, analysis) {
   return new Promise(function(resolve, reject) {
     fs.writeFile(`analysis-${fileName}`, JSON.stringify(analysis, null, "  "), function (err) {
       if (err) {

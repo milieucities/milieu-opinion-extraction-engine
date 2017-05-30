@@ -18,11 +18,3 @@ Put the csv file in the milieu-opinion-extraction-engine folder.
 >$npm install
 
 >node app.js {fileName} {questionText}
-
-Next steps:
-===========
-
-- Better Watson analysis
-- Other analysis, e.g. demographic info
-
-

@@ -1,0 +1,245 @@
+[
+  {
+    "id": "11",
+    "comment": "too many dogs not being cleaned up after",
+    "response": {
+      "sentiment": {
+        "document": {
+          "score": -0.636601,
+          "label": "negative"
+        }
+      },
+      "language": "en",
+      "keywords": [
+        {
+          "text": "dogs",
+          "sentiment": {
+            "score": -0.636601
+          },
+          "relevance": 0.94062
+        }
+      ],
+      "concepts": [
+        {
+          "text": "Dog",
+          "relevance": 0.886784,
+          "dbpedia_resource": "http://dbpedia.org/resource/Dog"
+        }
+      ],
+      "categories": [
+        {
+          "score": 0.817468,
+          "label": "/pets/dogs"
+        },
+        {
+          "score": 0.540812,
+          "label": "/home and garden/home furnishings/rugs and carpets"
+        },
+        {
+          "score": 0.0757245,
+          "label": "/pets/cats"
+        }
+      ]
+    }
+  },
+  {
+    "id": "11",
+    "comment": "Bike lanes make cyclists second-class citizens in traffic, motorists don't deal well with it",
+    "response": {
+      "sentiment": {
+        "document": {
+          "score": -0.587792,
+          "label": "negative"
+        }
+      },
+      "language": "en",
+      "keywords": [
+        {
+          "text": "Bike lanes",
+          "sentiment": {
+            "score": 0
+          },
+          "relevance": 0.997241
+        },
+        {
+          "text": "second-class citizens",
+          "sentiment": {
+            "score": 0
+          },
+          "relevance": 0.940652
+        }
+      ],
+      "concepts": [
+        {
+          "text": "Traffic",
+          "relevance": 0.944628,
+          "dbpedia_resource": "http://dbpedia.org/resource/Traffic"
+        }
+      ],
+      "categories": [
+        {
+          "score": 0.514082,
+          "label": "/automotive and vehicles/bicycles and accessories"
+        },
+        {
+          "score": 0.45802,
+          "label": "/automotive and vehicles/cars"
+        },
+        {
+          "score": 0.405496,
+          "label": "/sports/bicycling"
+        }
+      ]
+    }
+  },
+  {
+    "id": "11",
+    "comment": "The poorly designed and implemented bike lanes make riding in traffic more dangerous than it needs to be",
+    "response": {
+      "sentiment": {
+        "document": {
+          "score": -0.914115,
+          "label": "negative"
+        }
+      },
+      "language": "en",
+      "keywords": [
+        {
+          "text": "bike lanes",
+          "sentiment": {
+            "score": -0.914115
+          },
+          "relevance": 0.960766
+        },
+        {
+          "text": "traffic",
+          "sentiment": {
+            "score": -0.914115
+          },
+          "relevance": 0.544485
+        }
+      ],
+      "concepts": [
+        {
+          "text": "Traffic",
+          "relevance": 0.891559,
+          "dbpedia_resource": "http://dbpedia.org/resource/Traffic"
+        }
+      ],
+      "categories": [
+        {
+          "score": 0.62304,
+          "label": "/sports/bicycling/mountain biking"
+        },
+        {
+          "score": 0.265995,
+          "label": "/automotive and vehicles/cars"
+        },
+        {
+          "score": 0.265522,
+          "label": "/sports/bowling"
+        }
+      ]
+    }
+  },
+  {
+    "id": "12",
+    "comment": "continuity of path south after getting to bottom of UNB entrance",
+    "response": {
+      "sentiment": {
+        "document": {
+          "score": 0.701835,
+          "label": "positive"
+        }
+      },
+      "language": "en",
+      "keywords": [
+        {
+          "text": "UNB entrance",
+          "sentiment": {
+            "score": 0.701835
+          },
+          "relevance": 0.970175
+        },
+        {
+          "text": "path south",
+          "sentiment": {
+            "score": 0.701835
+          },
+          "relevance": 0.841254
+        }
+      ],
+      "concepts": [
+        {
+          "text": "Topology",
+          "relevance": 0.832528,
+          "dbpedia_resource": "http://dbpedia.org/resource/Topology"
+        }
+      ],
+      "categories": [
+        {
+          "score": 0.649254,
+          "label": "/technology and computing/data centers"
+        },
+        {
+          "score": 0.540111,
+          "label": "/technology and computing/computer security/network security"
+        },
+        {
+          "score": 0.347998,
+          "label": "/business and industrial"
+        }
+      ]
+    }
+  },
+  {
+    "id": "12",
+    "comment": "Aggressive motorists refusing to treat cyclists as real traffic, even when there is no bike lane",
+    "response": {
+      "sentiment": {
+        "document": {
+          "score": -0.832185,
+          "label": "negative"
+        }
+      },
+      "language": "en",
+      "keywords": [
+        {
+          "text": "Aggressive motorists",
+          "sentiment": {
+            "score": -0.683849
+          },
+          "relevance": 0.993207
+        },
+        {
+          "text": "bike lane",
+          "sentiment": {
+            "score": -0.676945
+          },
+          "relevance": 0.798475
+        }
+      ],
+      "concepts": [
+        {
+          "text": "Traffic",
+          "relevance": 0.912152,
+          "dbpedia_resource": "http://dbpedia.org/resource/Traffic"
+        }
+      ],
+      "categories": [
+        {
+          "score": 0.682164,
+          "label": "/automotive and vehicles/cars"
+        },
+        {
+          "score": 0.15439,
+          "label": "/sports/bicycling"
+        },
+        {
+          "score": 0.11802,
+          "label": "/automotive and vehicles/bicycles and accessories"
+        }
+      ]
+    }
+  }
+]
