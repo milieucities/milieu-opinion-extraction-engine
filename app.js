@@ -43,8 +43,8 @@ const parameters = {
     }
 };
 
-function main(fileName) {
-  parseCSV(fileName)
+function main(filename) {
+  parseCSV(filename)
   .then(function(json) {
     return getColumns(json)
   }).then(function(columns){
