@@ -13,28 +13,8 @@ We can then pick which graphical representation that best fits the data using li
 
 How to use
 =======
+Put the csv file in the milieu-opinion-extraction-engine folder.
+
 >$npm install
 
-Step 1: To turn the .csv file into .json, type:
->$node csvtojson.js
-
-Outputs AT-parsed.json
-
-Step 2: To run Watson, type:
->$node ATapp.js //this should produce a json file with the results of watson
-
-Results with keywords and sentiment should be in results.json file.
-
-Step 3: Pretty parse the results.json.
->$parseresults.js
-
-Next steps:
-===========
-
-Stream steps 1-3!
-
-Make the resultant .json file back into .csv
-
-Come up with a way to pick columns, possibly from the command line
-
-Make modular for any csv
+>node app.js {fileName} {questionText}
