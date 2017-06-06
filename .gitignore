@@ -14,3 +14,5 @@ analysis-*
 # Exclude CSVs
 *.csv
 
+# Include example.csv
+!example.csv
