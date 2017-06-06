@@ -1,4 +1,18 @@
-node_modules/
 AT-survey.csv
 AT-parsed.json
+
+# Exclude Node stuff
+node_modules/
+.node-*
+
+# Exclude keys
 keys.js
+
+# Exclude analysis results
+analysis-*
+
+# Exclude CSVs
+*.csv
+
+# Include example.csv
+!example.csv
