@@ -8,8 +8,11 @@ const csvConverter = new Converter({});
 //user provides csv path at command line
 const fileName = process.argv[2];
 
+//user provides analysis type at command line, can be -w (watson) or -d (demographics)
+const analysis = process.argv[3]
+
 //user provides question number at command line, can be 1 or more with comma separated list
-const questions = process.argv[3].split(',')
+const questions = process.argv[4].split(',')
 
 //watson credentials
 const username = require('./dev/keys.js').username;
