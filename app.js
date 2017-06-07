@@ -9,7 +9,7 @@ const csvConverter = new Converter({});
 const fileName = process.argv[2];
 
 //user provides analysis type at command line, can be -w (watson) or -d (demographics)
-const analysis = process.argv[3]
+const analysisType = process.argv[3]
 
 //user provides question number at command line, can be 1 or more with comma separated list
 const questions = process.argv[4].split(',')
@@ -51,7 +51,7 @@ function main(filename) {
   .then(function(json) {
     return getColumns(json)
   }).then(function(columns){
-    return countDemographics(columns)
+    return determineType(analysisType)
   }).then(function(analysis){
     return writeToJSON(fileName, analysis);
   })
@@ -88,15 +88,21 @@ function getColumns(json) {
   })
 }
 
+function determineType(analysisType) {
+  return new Promise(function(resolve, reject) {
+    if (analysisType == "-d") {
+      console.log("demographics");
+      return countDemographics(columns); // Does not work
+    } else if (analysisType == "-w") {
+      console.log("watson");
+      return analyzeWatson(columns); // Does not work
+    }
+  })
+}
+
 function countDemographics(comments) {
     return new Promise(function(resolve, reject) {
       console.log(comments);
-      /*comments.forEach(function(comment) {
-        parameters.text = comment.text;
-        console.log(comments);
-        analysis.push({id: comment.id, comment:comment.text});
-    })
-    resolve(analysis); */
   })
 }
 
