@@ -48,7 +48,7 @@ function main(filename) {
   .then(function(json) {
     return getColumns(json)
   }).then(function(columns){
-    return analyzeWatson(columns)
+    return countDemographics(columns)
   }).then(function(analysis){
     return writeToJSON(fileName, analysis);
   })
@@ -85,9 +85,21 @@ function getColumns(json) {
   })
 }
 
+function countDemographics(comments) {
+    return new Promise(function(resolve, reject) {
+      console.log(comments);
+      /*comments.forEach(function(comment) {
+        parameters.text = comment.text;
+        console.log(comments);
+        analysis.push({id: comment.id, comment:comment.text});
+    })
+    resolve(analysis); */
+  })
+}
+
 function analyzeWatson(comments) {
     return new Promise(function(resolve, reject) {
-      comments.forEach(function(comment) { 
+      comments.forEach(function(comment) {
         parameters.text = comment.text;
         var request = new XMLHttpRequest();
         request.open('POST', url, false, username, password);
@@ -115,7 +127,3 @@ function writeToJSON(fileName, analysis) {
 
   })
 }
-
-
-
-
