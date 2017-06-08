@@ -76,7 +76,7 @@ function parseCSV(fileName) {
 function getColumns(json) {
   return new Promise(function(resolve, reject){
     for (j = 0; j < questions.length; j++) {
-      for (i = 0; i <= apiCalls; i++) {
+      for (i = 0; i < json.length; i++) {
         var key = Object.keys(json[i])[questions[j]]
         var participantAnswer = json[i][key]
         if (participantAnswer != '' && participantAnswer.length > 2) {
@@ -92,21 +92,24 @@ function getColumns(json) {
 function determineType(analysisType, columns) {
   return new Promise(function(resolve, reject) {
     if (analysisType == "-d") {
-      console.log("demographics");
       resolve(countDemographics(columns));
-      console.log("demo done");
     } else if (analysisType == "-w") {
-      console.log("watson");
       resolve(analyzeWatson(columns));
-      console.log("watson done");
+    } else {
+      reject(new Error(console.log(`Please provide a flag for the type of analysis. For quantitative data, try -d. For qualitative data, try -w.`)))
     }
   })
 }
 
 function countDemographics(comments) {
     return new Promise(function(resolve, reject) {
-      console.log(comments);
+      comments.forEach(function(comment) {
+        analysis.push(comment)
+      })
+      resolve(analysis);
   })
+    reject(new Error(console.log(`Cannot push to analysis`)))
+
 }
 
 function analyzeWatson(comments) {
@@ -132,7 +135,7 @@ function writeToJSON(fileName, analysis) {
   return new Promise(function(resolve, reject) {
     fs.writeFile(`analysis-${fileName}`, JSON.stringify(analysis, null, "  "), function (err) {
       if (err) {
-        reject(new Error(`Cannot write output file.`))
+        reject(new Error(console.log(`Cannot write output file.`)))
       }
       resolve(console.log(`Success! Check analysis-${fileName}`));
     });
