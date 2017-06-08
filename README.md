@@ -15,6 +15,10 @@ How to use
 =======
 Put the csv file in the milieu-opinion-extraction-engine folder.
 
->$npm install
+>Make a directory called /dev in the project folder and add Watson Keys (Contact project manager for keys)
 
->node app.js {fileName} {questionText}
+>$ npm install
+
+>$ node app.js {fileName} {analysisType} {questionText}
+
+Choose file.csv, analysis type (-d for demographics and -w for watson) and the column(s) you are trying to analyze.
