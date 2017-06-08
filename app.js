@@ -93,11 +93,11 @@ function determineType(analysisType, columns) {
   return new Promise(function(resolve, reject) {
     if (analysisType == "-d") {
       console.log("demographics");
-      resolve(countDemographics(columns)); // Does not work
+      resolve(countDemographics(columns));
       console.log("demo done");
     } else if (analysisType == "-w") {
       console.log("watson");
-      resolve(analyzeWatson(columns)); // Does not work
+      resolve(analyzeWatson(columns));
       console.log("watson done");
     }
   })
