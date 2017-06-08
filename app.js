@@ -51,7 +51,8 @@ function main(filename) {
   .then(function(json) {
     return getColumns(json)
   }).then(function(columns){
-    return determineType(analysisType)
+    return determineType(analysisType, columns);
+    console.log("done")
   }).then(function(analysis){
     return writeToJSON(fileName, analysis);
   })
@@ -88,14 +89,16 @@ function getColumns(json) {
   })
 }
 
-function determineType(analysisType) {
+function determineType(analysisType, columns) {
   return new Promise(function(resolve, reject) {
     if (analysisType == "-d") {
       console.log("demographics");
-      return countDemographics(columns); // Does not work
+      resolve(countDemographics(columns)); // Does not work
+      console.log("demo done");
     } else if (analysisType == "-w") {
       console.log("watson");
-      return analyzeWatson(columns); // Does not work
+      resolve(analyzeWatson(columns)); // Does not work
+      console.log("watson done");
     }
   })
 }
