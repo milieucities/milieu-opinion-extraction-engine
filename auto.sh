@@ -5,26 +5,25 @@
 #VARS
 
 #
-launchMOEE=$ node $1 $2 $3 $4
+launchMOEE=$ node app.js $1 -d $2
 
 
 #Go to the MOEE repository
 cd ~/projects/milieu-opinion-extraction-engine
 # Launch MOEE
 echo $launchMOEE
-echo analysis-$2
+echo analysis-$1
 # Transform CSV into JSON
-cat analysis-$2 > analysis$3_$2[$4].json
+cat analysis-$1 > analysis-d_$1[$2].json
 # Move analyzed results to KILN repository
-mv ~/projects/milieu-opinion-extraction-engine/analysis$3_$2[$4].json ~/projects/the-kiln/data/
+mv ~/projects/milieu-opinion-extraction-engine/analysis-d_$1[$2].json ~/projects/the-kiln/data/
 # Go to the KILN repository
 cd ~/projects/the-kiln/
-
-
-node demographics.js ./data/analysis$3_$2[$4].json
+# Conduct demographics calculations
+node demographics.js ./data/analysis-d_$1[$2].json
 
 #ls -al
-#if $3 = -d
+#if -d = -d
 #then
 
 
