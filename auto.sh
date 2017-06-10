@@ -8,8 +8,8 @@ launchMOEE=$ node $1 $2 $3 $4
 cd ~/projects/milieu-opinion-extraction-engine
 # Launch MOEE
 echo $launchMOEE
+echo analysis-$2
 
-# echo analysis-$2
 # Transform CSV into JSON
 # cat analysis-$2 > analysis$3_$2[$4].json
 # Move analyzed results to KILN repository
