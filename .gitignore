@@ -6,7 +6,7 @@ node_modules/
 .node-*
 
 # Exclude keys
-keys.js
+dev/keys.js
 
 # Exclude analysis results
 analysis-*
