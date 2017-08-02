@@ -6,21 +6,21 @@ const Converter = require("csvtojson").Converter;
 const csvConverter = new Converter({});
 
 //user provides csv path at command line
-const fileName = process.argv[2];
+const fileName = process.argv[2] || ''
 
 //user provides analysis type at command line, can be -w (watson) or -d (demographics)
-const analysisType = process.argv[3]
+const analysisType = process.argv[3] || ''
 
 //user provides question number at command line, can be 1 or more with comma separated list
-const questions = process.argv[4].split(',')
+const questionColumns = process.argv[4] || ''
 
 //watson credentials
 const username = require('./dev/keys.js').username;
 const password = require('./dev/keys.js').password;
 
 //watson only runs for this amount of comments to save API calls.
-//to analyze all comments, change this to json.length
-const apiCalls = 5;
+const apiCalls = 1;
+
 
 //responses get pushed into this array to be analyzed
 const comments = [];
@@ -30,9 +30,6 @@ const analysis = [];
 const parameters = {
   'text': '',
   'features': {
-     'concepts': {
-       'limit': 2
-      },
       'categories': {
       'limit' : 1
       },
@@ -47,15 +44,19 @@ const parameters = {
 };
 
 function main(filename) {
-  parseCSV(filename)
-  .then(function(json) {
-    return getColumns(json)
-  }).then(function(columns){
-    return determineType(analysisType, columns);
-    console.log("done")
-  }).then(function(analysis){
-    return writeToJSON(fileName, analysis);
-  })
+  if (process.argv.length === 5){
+    parseCSV(filename)
+    .then(function(json) {
+      return getColumns(json)
+    }).then(function(columns){
+      return determineType(analysisType, columns);
+      console.log("done")
+    }).then(function(analysis){
+      return writeToJSON(fileName, analysis);
+    })
+  } else if (process.argv < 5){
+    console.log("Please provide the following arguments: csv file, type of analysis, question column number.")
+  }
 }
 
 main(fileName);
@@ -75,17 +76,28 @@ function parseCSV(fileName) {
 
 function getColumns(json) {
   return new Promise(function(resolve, reject){
-    for (j = 0; j < questions.length; j++) {
-      for (i = 0; i <= apiCalls; i++) {
-        var key = Object.keys(json[i])[questions[j]]
-        var participantAnswer = json[i][key]
-        if (participantAnswer != '' && participantAnswer.length > 2) {
-          parameters.text = participantAnswer;
-          comments.push({id: questions[j], text: parameters.text});
+    try {
+      //for some reason this runs the entire json right now
+      for (j = 0; j < apiCalls; j++) {
+        for (i = 0; i < json.length; i++) {
+          //split questions
+          var questions = questionColumns.split(',')
+          //parse the question number
+          var column = parseInt(questions[j]) - 1
+          var keys = Object.keys(json[i])
+          //get question text as key to participantAnswer
+          var key = keys[column]
+          var participantAnswer = json[i][key]
+          if (participantAnswer != '' && participantAnswer.length > 60) {
+            parameters.text = participantAnswer;
+            comments.push({id: questions[j], text: parameters.text});
+        }
       }
     }
+    resolve(comments);
+  } catch(err) {
+    reject(new Error(console.log("error in getColumns: ", err)))
   }
-  resolve(comments);
   })
 }
 
@@ -113,6 +125,7 @@ function analyzeWatson(comments) {
     return new Promise(function(resolve, reject) {
       comments.forEach(function(comment) {
         parameters.text = comment.text;
+        console.log(parameters.text)
         var request = new XMLHttpRequest();
         request.open('POST', url, false, username, password);
         request.setRequestHeader('Content-Type', 'application/json');
