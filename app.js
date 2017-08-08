@@ -6,7 +6,7 @@ const Converter = require("csvtojson").Converter;
 const csvConverter = new Converter({});
 
 //user provides csv path at command line
-const fileName = process.argv[2] || ''
+const filename = process.argv[2] || ''
 
 //user provides analysis type at command line, can be -w (watson) or -d (demographics)
 const analysisType = process.argv[3] || ''
@@ -44,39 +44,56 @@ const parameters = {
 };
 
 function main(filename) {
-  if (process.argv.length === 5){
-    parseCSV(filename)
+  if (process.argv.length === 5) {
+    checkFileExt(filename)
     .then(function(json) {
       return getColumns(json)
-    }).then(function(columns){
+    })
+    .then(function(columns){
       return determineType(analysisType, columns);
       console.log("done")
     }).then(function(analysis){
-      return writeToJSON(fileName, analysis);
+      return writeToJSON(filename, analysis);
     })
   } else if (process.argv < 5){
-    console.log("Please provide the following arguments: csv file, type of analysis, question column number.")
+    console.log("Please provide the following arguments: csv or json file, type of analysis, question number.")
   }
 }
 
-main(fileName);
+main(filename);
 
-function parseCSV(fileName) {
+//if the file is already in JSON, skip parsing
+function checkFileExt(filename) {
+  return new Promise(function(resolve, reject) {
+    var reJSON = /\.(json)$/i
+    var reCSV = /\.(csv)$/i
+    if (reJSON.exec(filename)) {
+      resolve(getColumns(filename))
+    } else if (reCSV.exec(filename)) {
+      console.log("get into checkFileExt as csv")
+      resolve(parseCSV(filename))
+    } else {
+      reject(new Error(console.log(`Invalid file type. Please provide a .csv or .json file`)))
+    }
+  })
+}
+
+function parseCSV(filename) {
   return new Promise(function(resolve, reject) {
     var converter = new Converter({});
     converter.on("end_parsed", function(json, err) {
       if (err) {
+        console.log("error in parseCSV")
         reject(new Error("Cannot parse CSV!"))
       }
       resolve(json);
-    });
-  fs.createReadStream(fileName).pipe(converter);
-  });
-}
+    })
+  fs.createReadStream(filename).pipe(converter);
+  })
+};
 
 function getColumns(json) {
-  return new Promise(function(resolve, reject){
-    try {
+  return new Promise(function(resolve, reject) {
       //for some reason this runs the entire json right now
       for (j = 0; j < apiCalls; j++) {
         for (i = 0; i < json.length; i++) {
@@ -91,15 +108,11 @@ function getColumns(json) {
           if (participantAnswer != '' && participantAnswer.length > 60) {
             parameters.text = participantAnswer;
             comments.push({id: questions[j], text: parameters.text});
+          }  
         }
       }
-    }
-  }
     resolve(comments);
   })
-  } catch(err) {
-    reject(new Error(console.log("error in getColumns: ", err)))
-  }
 }
 
 function determineType(analysisType, columns) {
@@ -122,7 +135,6 @@ function countDemographics(comments) {
       resolve(analysis);
   })
     reject(new Error(console.log(`Cannot push to analysis`)))
-
 }
 
 function analyzeWatson(comments) {
@@ -145,13 +157,13 @@ function analyzeWatson(comments) {
   })
 }
 
-function writeToJSON(fileName, analysis) {
+function writeToJSON(filename, analysis) {
   return new Promise(function(resolve, reject) {
-    fs.writeFile(`analysis-${fileName}`, JSON.stringify(analysis, null, "  "), function (err) {
+    fs.writeFile(`analysis-${filename}`, JSON.stringify(analysis, null, "  "), function (err) {
       if (err) {
         reject(new Error(console.log(`Cannot write output file.`)))
       }
-      resolve(console.log(`Success! Check analysis-${fileName}`));
+      resolve(console.log(`Success! Check analysis-${filename}`));
     });
 
   })
