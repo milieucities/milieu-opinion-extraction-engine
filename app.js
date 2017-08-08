@@ -51,7 +51,6 @@ function main(filename) {
     })
     .then(function(columns){
       return determineType(analysisType, columns);
-      console.log("done")
     }).then(function(analysis){
       return writeToJSON(filename, analysis);
     })
@@ -70,7 +69,6 @@ function checkFileExt(filename) {
     if (reJSON.exec(filename)) {
       resolve(getColumns(filename))
     } else if (reCSV.exec(filename)) {
-      console.log("get into checkFileExt as csv")
       resolve(parseCSV(filename))
     } else {
       reject(new Error(console.log(`Invalid file type. Please provide a .csv or .json file`)))
@@ -83,7 +81,6 @@ function parseCSV(filename) {
     var converter = new Converter({});
     converter.on("end_parsed", function(json, err) {
       if (err) {
-        console.log("error in parseCSV")
         reject(new Error("Cannot parse CSV!"))
       }
       resolve(json);
@@ -111,7 +108,7 @@ function getColumns(json) {
           }  
         }
       }
-    resolve(comments);
+    resolve(determineType(analysisType, comments));
   })
 }
 
@@ -149,8 +146,10 @@ function analyzeWatson(comments) {
         if (request.status === 200) {
           var response = JSON.parse(request.responseText);
           analysis.push({id: comment.id, comment:comment.text, watson:response});
+          console.log(response)
         } else {
       reject(new Error(`An http error occurred; ${JSON.stringify(parameters)}, ${request.status}, ${request.responseText}, ${request.error}` ));
+      return;
       }
     })
     resolve(analysis);
