@@ -138,21 +138,21 @@ function analyzeWatson(comments) {
     return new Promise(function(resolve, reject) {
       comments.forEach(function(comment) {
         parameters.text = comment.text;
-        console.log(parameters.text)
-        var request = new XMLHttpRequest();
-        request.open('POST', url, false, username, password);
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.send(JSON.stringify(parameters));
-        if (request.status === 200) {
-          var response = JSON.parse(request.responseText);
-          analysis.push({id: comment.id, comment:comment.text, watson:response});
-          console.log(response)
-        } else {
-      reject(new Error(`An http error occurred; ${JSON.stringify(parameters)}, ${request.status}, ${request.responseText}, ${request.error}` ));
-      return;
-      }
-    })
-    resolve(analysis);
+        if (parameters.text != undefined) {
+          var request = new XMLHttpRequest();
+          request.open('POST', url, false, username, password);
+          request.setRequestHeader('Content-Type', 'application/json');
+          request.send(JSON.stringify(parameters));
+          if (request.status === 200) {
+            var response = JSON.parse(request.responseText);
+            analysis.push({id: comment.id, comment:comment.text, watson:response});
+            console.log(response)
+          } else {
+            reject(new Error(`${JSON.stringify(parameters)}, ${request.status}, ${request.responseText}, ${request.error}`));
+          }
+        }
+      })
+      resolve(analysis);
   })
 }
 

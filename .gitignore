@@ -17,3 +17,4 @@ analysis-*
 
 # Include example.csv
 !example.csv
+noumea.json
