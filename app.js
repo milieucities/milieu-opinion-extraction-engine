@@ -67,7 +67,7 @@ function checkFileExt(filename) {
     var reJSON = /\.(json)$/i
     var reCSV = /\.(csv)$/i
     if (reJSON.exec(filename)) {
-      resolve(getColumns(filename))
+      resolve(parseJSON(filename))
     } else if (reCSV.exec(filename)) {
       resolve(parseCSV(filename))
     } else {
@@ -89,9 +89,26 @@ function parseCSV(filename) {
   })
 };
 
+function parseJSON(filename) {
+  return new Promise(function(resolve, reject) {
+    var readStream = fs.createReadStream(filename)
+    readStream.on('open', function () {
+      // This just pipes the read stream to the response object (which goes to the client)
+      readStream.pipe(res);
+      resolve(res)
+    })
+  // This catches any errors that happen while creating the readable stream (usually invalid names)
+    readStream.on('error', function(err) {
+      reject(res)
+      res.end(err);
+    })
+  })
+};
+
 function getColumns(json) {
   return new Promise(function(resolve, reject) {
       //for some reason this runs the entire json right now
+      console.log("here's the json", json)
       for (j = 0; j < apiCalls; j++) {
         for (i = 0; i < json.length; i++) {
           //split questions
