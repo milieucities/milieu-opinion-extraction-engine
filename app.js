@@ -4,6 +4,8 @@ const fs = require('fs');
 const csvToJson = require('csvtojson')
 const Converter = require("csvtojson").Converter;
 const csvConverter = new Converter({});
+const JSONparse = require('json-parse-stream')
+const prettyjson = require('prettyjson');
 
 //user provides csv path at command line
 const filename = process.argv[2] || ''
@@ -40,7 +42,8 @@ const parameters = {
         'sentiment': true,
         'limit': 2
       }
-    }
+    },
+    "language": "fr"
 };
 
 function main(filename) {
@@ -91,39 +94,45 @@ function parseCSV(filename) {
 
 function parseJSON(filename) {
   return new Promise(function(resolve, reject) {
-    var readStream = fs.createReadStream(filename)
-    readStream.on('open', function () {
-      // This just pipes the read stream to the response object (which goes to the client)
-      readStream.pipe(res);
-      resolve(res)
-    })
-  // This catches any errors that happen while creating the readable stream (usually invalid names)
-    readStream.on('error', function(err) {
-      reject(res)
-      res.end(err);
-    })
+    var json = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    if (json == undefined) {
+      reject(new Error("Cannot parse JSON!"))
+    }
+    resolve(json)
   })
 };
+
 
 function getColumns(json) {
   return new Promise(function(resolve, reject) {
       //for some reason this runs the entire json right now
-      console.log("here's the json", json)
-      for (j = 0; j < apiCalls; j++) {
-        for (i = 0; i < json.length; i++) {
-          //split questions
-          var questions = questionColumns.split(',')
-          //parse the question number
-          var column = parseInt(questions[j]) - 1
-          var keys = Object.keys(json[i])
-          //get question text as key to participantAnswer
-          var key = keys[column]
-          var participantAnswer = json[i][key]
-          if (participantAnswer != '' && participantAnswer.length > 60) {
-            parameters.text = participantAnswer;
-            comments.push({id: questions[j], text: parameters.text});
-          }  
+      var reComment = /(comment)$/i
+      for (x in json) {
+        var participant = json[x].answers
+        for (y in participant) {
+          var questionBody = participant[y].question.question_number
+          var textAnswer = participant[y].body
+          if (textAnswer.length > 20) {
+            parameters.text = textAnswer;
+            comments.push({participant_id: json[x].id, question: questionBody, text: textAnswer})
+          }
         }
+
+      // for (j = 0; j < apiCalls; j++) {
+      //   for (i = 0; i < json.length; i++) {
+      //     //split questions
+      //     var questions = questionColumns.split(',')
+      //     //parse the question number
+      //     var column = parseInt(questions[j]) - 1
+      //     var keys = Object.keys(json[i])
+      //     //get question text as key to participantAnswer
+      //     var key = keys[column]
+      //     var participantAnswer = json[i][key]
+      //     if (participantAnswer != '' && participantAnswer.length > 60) {
+      //       parameters.text = participantAnswer;
+      //       comments.push({id: questions[j], text: parameters.text});
+      //     }  
+      //   }
       }
     resolve(determineType(analysisType, comments));
   })
@@ -144,6 +153,7 @@ function determineType(analysisType, columns) {
 function countDemographics(comments) {
     return new Promise(function(resolve, reject) {
       comments.forEach(function(comment) {
+        console.log("here's the comment", comment)
         analysis.push(comment)
       })
       resolve(analysis);
@@ -162,10 +172,11 @@ function analyzeWatson(comments) {
           request.send(JSON.stringify(parameters));
           if (request.status === 200) {
             var response = JSON.parse(request.responseText);
-            analysis.push({id: comment.id, comment:comment.text, watson:response});
-            console.log(response)
+            var watsonOutput = {id: comment.participant_id, comment:parameters.text, watson:response}
+            analysis.push(watsonOutput);
+            console.log(watsonOutput)
           } else {
-            reject(new Error(`${JSON.stringify(parameters)}, ${request.status}, ${request.responseText}, ${request.error}`));
+            console.log(`${JSON.stringify(parameters)}, ${request.status}, ${request.responseText}, ${request.error}`);
           }
         }
       })
@@ -177,7 +188,8 @@ function writeToJSON(filename, analysis) {
   return new Promise(function(resolve, reject) {
     fs.writeFile(`analysis-${filename}`, JSON.stringify(analysis, null, "  "), function (err) {
       if (err) {
-        reject(new Error(console.log(`Cannot write output file.`)))
+        reject(new Error(console.log(`Cannot write output file: ${err}`)))
+        return;
       }
       resolve(console.log(`Success! Check analysis-${filename}`));
     });
